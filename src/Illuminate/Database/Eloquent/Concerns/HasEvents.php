@@ -34,14 +34,14 @@ trait HasEvents
     {
         $instance = new static;
 
-        $className = is_string($class) ? $class : get_class($class);
-
         // When registering a model observer, we will spin through the possible events
         // and determine if this observer has that method. If it does, we will hook
         // it into the model's event system, making it convenient to watch these.
         foreach ($instance->getObservableEvents() as $event) {
             if (method_exists($class, $event)) {
-                static::registerModelEvent($event, $className.'@'.$event);
+                static::registerModelEvent(
+                    $event, $is_string($class) ? $class.'@'.$event : [$class, $event]
+                );
             }
         }
     }
